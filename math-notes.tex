@@ -1,0 +1,119 @@
+\documentclass[11pt]{article}
+\date{\today}
+\usepackage{fullpage}
+\usepackage{fancyhdr}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{bbm}
+\usepackage{sectsty}
+\usepackage{slashbox}
+\usepackage{rotating}
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+pdfauthor={Christopher M. Maes},
+citecolor=black,
+linkcolor=black,
+urlcolor=black
+}
+
+\newfont{\sansf}{cmss10}
+\newfont{\solverf}{cmss10 scaled 1100}
+\newfont{\bssten}{cmssbx10}
+\newfont{\bssnine}{cmssbx10 scaled 900}
+\newfont{\bssdoz}{cmssbx10 scaled 1200}
+
+
+\newcommand{\type}{Notes for camera projection}
+\newcommand{\info}{Christopher Maes}
+\pagestyle{fancy} 
+\date{\today}
+\chead{\type}
+\rhead{\today}
+\lhead{\info}
+\rfoot{}
+\cfoot{\thepage}
+\lfoot{}
+\renewcommand{\footrulewidth}{.4pt}
+\addtolength{\headsep}{.5in}
+\renewcommand{\headheight}{14pt}
+
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+\setlength{\parindent}{0in}
+
+\newcommand{\norm}[1]{\left\lVert\,#1\,\right\rVert}
+\newcommand{\rank}{\mathrm{rank}}
+\newcommand{\pmat}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\abs}[1]{\left\vert #1 \right\vert}
+\newcommand{\set}[2]{\left\{#1  \left| #2\right\}\right.}
+\newcommand{\R}{\mathbbm{R}}
+\newcommand{\matlab}{{\sc Matlab}}
+\newcommand{\dims}[2]{\R^{#1 \times #2}}
+\newcommand{\diag}{\mathrm{diag}}
+\newcommand{\range}{\mathcal{R}}
+\newcommand{\nullspace}{\mathcal{N}}
+
+\newcommand{\maximize}{\text{maximize }}
+\newcommand{\minimize}{\text{minimize }}
+\newcommand{\st}{\text{subject to }}
+\renewcommand{\l}{\ell}
+\newcommand{\half}{{\textstyle{\frac12}}}
+
+
+
+\begin{document} 
+
+
+The main mathematical problem associated with the camera projection 
+problem is: 
+
+Given the projections of a point $x \in \R^n$ onto a set of $m$ 
+$n-1$ dimensional hyperplanes, how do we reconstruct an estimate of
+$x$?
+
+Suppose the hyperplanes are defined as 
+\[
+\mathcal{P} = \{ x \in \R^n \ |\ a^T x = \beta  \}.
+\] 
+Let the columns of the matrix $Z \in \dims{n}{n-1}$ form a basis for
+the nullspace of $a^T$. That is, $a^T Z = 0$.  And suppose we are
+given $x_0 \in \R^n$ which defines an origin of the hyperplane with
+$a^T x_0 = \beta$, and $y \in \R^{n-1}$ the $n-1$ dimensional
+projection of $x$ onto the hyperplane.
+
+Define $u = x - x_0$, and let $P u$ be the projection of $u$ onto the
+hyperplane, then $Pu = Z y$. We may write $u = w + v$ where $w \in
+\range(Z)$ and $v \in \nullspace(Z^T)$.  So that
+\[ 
+u = w + v = Z y + v 
+\] 
+Since we have that $Z^T v = 0$, multiplying the above by $Z^T$ we have
+$Z^T u = Z^T Z y$, or $y = (Z^T Z)^{-1} Z^T u$.  So the projection
+matrix $P$ is defined as $P = Z (Z^T Z)^{-1} Z^T$. Thus, we have
+that 
+\[
+P (x - x0) = Z y,
+\]
+where $P$, $x_0$, $y$, and $Z$ are defined from the data, and $x$ 
+is unknown. 
+
+Let $P_i$ and $Z_i$ denote the projection and nullspace matrix 
+associated with the $i$th hyperplane, and $x_0^i$ and $y_i$ 
+denote the $i$th hyperplane origin and projected coordinate. 
+To determine an estimate for $x$ we may solve the least-squares
+problem 
+\begin{equation}
+\underset{x}{\minimize}  \quad  \sum_{i=1}^m \norm{ P_i x - P_i x_0^i - Z_i y_i} 
+\end{equation}
+This is equivalent to the problem 
+\[
+\underset{x}{\minimize} \quad \norm{ \pmat{P_1 \\ \vdots \\ P_m } x 
+                                    -\pmat{P_1 x_0^1 - Z_1 y_1 \\ \vdots \\ P_m x_0^m - Z_m y_m} }
+\]
+
+
+
+
+    
+\end{document}
