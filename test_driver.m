@@ -42,3 +42,4 @@ scatter3(X(1,:), X(2,:), X(3,:),1,'r');
 
 fprintf('Max error: %e\n', norm(Xest - X,inf));
 
+points2ply(Xest, 'test.ply');
