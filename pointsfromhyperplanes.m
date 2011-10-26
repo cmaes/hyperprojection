@@ -13,7 +13,7 @@ function X = pointsfromhyperplanes(AT,Beta,X0,Y,m)
 %        X0: n x m matrix that defines the origin of the
 %            hyperplanes.  a'*x0 = beta, x0 for the ith hyperplane
 %            is given by X0(:,i) 
-%         Y: m*n x N matrix that defines the projection of the 
+%         Y: m*(n-1) x N matrix that defines the projection of the 
 %            points x onto the hyperplanes. Y(1:n,:) contains
 %            the projection of each of the N points onto the 
 %            first hyperplane. Y(m*(n-1):m*n,:) contains the
