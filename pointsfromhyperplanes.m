@@ -70,6 +70,8 @@ for j=1:N
 
      rhs = Pdiag*X0i + Zdiag*Yj;
      X(:,j) = A\rhs;
+
+     fprintf('Residual point %d %e\n', j, norm(A*X(:,j)-rhs));
 end
 
 
