@@ -33,25 +33,43 @@ checkdims(Y, [m*(n-1), N], 'Dimensions of AT, m, Y not consistent');
 % at once, in a single shot, but this requires less thought. 
 X = zeros(n,N);
 
-
-% Construct the matrices 
-A = zeros(n*m,n); 
-Pdiag = zeros(n*m,n*m);
-Zdiag = zeros(n*m,(n-1)*m);
-
-for i=1:m 
-    [Pi,Zi] = hyperplane_projection(AT(i,:)');
-    A(n*(i-1)+1:n*i, :) = Pi;
-    pindex = n*(i-1)+1:n*i;
-    Pdiag(pindex, pindex) = Pi; 
-    zindex = (n-1)*(i-1)+1:(n-1)*i;
-    Zdiag(pindex, zindex) = Zi; 
-end
-
 for j=1:N
-% form and solve the least squares problem to determine the jth point
-    rhs = Pdiag*X0(:) + Zdiag*Y(:,j);
-    X(:,j) = A\rhs;
+     % form and solve the least squares problem to determine the jth
+     % point
+
+     % logical m x 1 array that states whether the projection of 
+     % the jth point on the ith hyperplane is available
+     
+     point_in_hp = ~any(isnan(reshape(Y(:,j), n-1, m)));
+
+     mp = sum(point_in_hp);
+
+     % Construct the matrices 
+     A = zeros(n*mp,n); 
+     Pdiag = zeros(n*mp,n*mp);
+     Zdiag = zeros(n*mp,(n-1)*mp);
+     Yj = zeros((n-1)*mp,1);
+     X0i = zeros(n*mp,1);
+
+     hyperplane_index = find(point_in_hp);
+
+     for ii=1:mp
+         i = hyperplane_index(ii); 
+         [Pi,Zi] = hyperplane_projection(AT(i,:)');
+
+         pindex = n*(ii-1)+1:n*ii;
+         A(pindex, :) = Pi;
+         Pdiag(pindex, pindex) = Pi; 
+
+         zindex = (n-1)*(ii-1)+1:(n-1)*ii;
+         Zdiag(pindex, zindex) = Zi;
+
+         Yj(zindex) = Y((n-1)*(i-1)+1:(n-1)*i,j);
+         X0i(pindex) = X0(:,i);
+     end
+
+     rhs = Pdiag*X0i + Zdiag*Yj;
+     X(:,j) = A\rhs;
 end
 
 
