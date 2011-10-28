@@ -1,10 +1,12 @@
 load('test.mat');
-
-theta = [0; pi/2; pi; -pi/2];
+epsilon = 1e-6;
+theta = [0; pi/2; pi; 3*pi/2+epsilon];
 Y = -Y;
 
 m = length(theta);
 N = size(Y,2);
+
+close all
 
 % Plot 2d points
 for i=1:m
